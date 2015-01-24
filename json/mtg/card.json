@@ -1,41 +1,27 @@
-{
-  "name": "About Face",
-  "id": "about-face",
-  "url": "http://localhost:3000/mtg/cards/about-face",
-  "store_url": "http://store.tcgplayer.com/magic/urzas-legacy/about-face?partner=DECKBREW",
-  "types": [
-    "instant"
-  ],
-  "colors": [
-    "red"
-  ],
-  "cmc": 1,
-  "cost": "{R}",
-  "text": "Switch target creature's power and toughness until end of turn.",
-  "formats": {
-    "commander": "legal",
-    "legacy": "legal",
-    "vintage": "legal"
-  },
-  "editions": [
-    {
-      "set": "Urza's Legacy",
-      "set_id": "ULG",
-      "rarity": "common",
-      "artist": "Melissa A. Benson",
-      "multiverse_id": 12414,
-      "flavor": "The overconfident are the most vulnerable.",
-      "number": "73",
-      "layout": "normal",
-      "price": {
-        "low": 0,
-        "median": 0,
-        "high": 0
-      },
-      "url": "http://localhost:3000/mtg/cards?multiverseid=12414",
-      "image_url": "https://image.deckbrew.com/mtg/multiverseid/12414.jpg",
-      "set_url": "http://localhost:3000/mtg/sets/ULG",
-      "store_url": "http://store.tcgplayer.com/magic/urzas-legacy/about-face?partner=DECKBREW"
+   {
+               "name" : "Sen Triplets",
+
+           "manaCost" : "{2}{W}{U}{B}",
+                "cmc" : 5,
+             "colors" : ["White", "Blue", "Black"],
+
+               "type" : "Legendary Artifact Creature — Human Wizard",
+         "supertypes" : ["Legendary"],
+              "types" : ["Artifact", "Creature"],
+           "subtypes" : ["Human", "Wizard"],
+
+             "rarity" : "Mythic Rare",
+
+               "text" : "At the beginning of your upkeep, choose target opponent.                          This turn, that player can't cast spells or activate                          abilities and plays with his or her hand revealed.                          You may play cards from that player's hand this turn.", 
+             "flavor" : "They are the masters of your mind.",
+
+             "artist" : "Greg Staples",
+             "number" : "109",
+
+              "power" : "3",
+          "toughness" : "3",
+
+             "layout" : "normal",
+       "multiverseid" : 180607,
+          "imageName" : "sen triplets"
     }
-  ]
-}

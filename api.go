@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 )
 
 //go:generate gojson -o card.go -input json/mtg/card.json -name "Card" -pkg "godeckbrew"
-
-//go:generate gojson -o set.go -input json/mtg/set.json -name "Set" -pkg "godeckbrew"
 
 const baseUrl = "https://api.deckbrew.com"
 
@@ -48,8 +47,9 @@ func Setlist(set string) (cards []*Card, err error) {
 
 	v := url.Values{}
 	v.Set("set", set)
-	u := baseUrl + endpoint + "?" + v.Encode()
+	page := 0
 	for {
+		u := baseUrl + endpoint + "?" + v.Encode()
 		resp, err := http.Get(u)
 		if err != nil {
 			return nil, err
@@ -69,11 +69,8 @@ func Setlist(set string) (cards []*Card, err error) {
 
 		if nextMatch := r.FindStringSubmatch(linkHeader); len(nextMatch) == 2 {
 			cards = append(cards, result...)
-			parsedUrl, err := url.Parse(nextMatch[1])
-			if err != nil {
-				return nil, err
-			}
-			u = baseUrl + parsedUrl.Path
+			page++
+			v.Set("page", strconv.Itoa(page))
 		} else {
 			break
 		}
