@@ -55,13 +55,13 @@ func (p Price) Cents() (Cents, error) {
 
 }
 
-func (c *Card) Price() (p Price, err error) {
+func (c *Card) Price() (p Cents, err error) {
 	//TODO use set
 	price, err := ChannelFireballPrice(c.Name, "")
 	if err != nil {
-		return
+		return -1, err
 	}
-	return price, nil
+	return price.Cents()
 }
 
 func Setlist(set string) (cards []*Card, err error) {
