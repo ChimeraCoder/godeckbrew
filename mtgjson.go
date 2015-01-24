@@ -1,7 +1,9 @@
 package godeckbrew
 
 import (
+	"encoding/json"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -15,20 +17,21 @@ var app = appdirs.New("magictcg", "chimeracoder", ".1")
 const _CardIndexFilename = "Allsets-x.json"
 const _CardIndexUrl = "http://mtgjson.com/json/"
 
+func GetSet(set string) (*Set, error) {
+	if err := DownloadSet(set); err != nil {
+		return nil, err
+	}
 
-func GetSet(set string) ([]*Card, error) {
-    if err := DownloadSet(set); err != nil{
-        return err
-    }
+	filename := path.Join(app.UserData(), set+".json")
 
-	filename := path.Join(app.UserData(), set + ".json")
+	bts, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
 
-    bts, err := ioutil.ReadFile(filename)
-    if err != nil {
-        return nil, err
-    }
-
-    json.Unmarshal
+	var result Set
+	err = json.Unmarshal(bts, &result)
+	return &result, err
 
 }
 
@@ -36,10 +39,10 @@ func GetSet(set string) ([]*Card, error) {
 // "set" must be a three-letter string (e.g. KTK for Khans of Tarkir)
 func DownloadSet(set string) error {
 
-    if set == "" {
-        set = _CardIndexFilename
-    }
-	filename := path.Join(app.UserData(), set + ".json")
+	if set == "" {
+		set = _CardIndexFilename
+	}
+	filename := path.Join(app.UserData(), set+".json")
 	// Check if file already exists
 	if _, err := os.Stat(filename); err != nil {
 
@@ -55,7 +58,7 @@ func DownloadSet(set string) error {
 			return err
 		}
 		defer out.Close()
-		log.Printf("Fetching url %s", _CardIndexUrl + set + ".json")
+		log.Printf("Fetching url %s", _CardIndexUrl+set+".json")
 		resp, err := http.Get(_CardIndexUrl + set + ".json")
 		if err != nil {
 			return err
