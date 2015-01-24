@@ -24,6 +24,7 @@ func (s Set) BoosterSize() int {
 	return len(s.Booster)
 }
 
+// NewBoosterPack returns a slice of 15 cards with the appropriate rarity distributions
 func (s Set) NewBoosterPack() []*Card {
 	// TODO support other booster distributions
 	cards := make([]*Card, 15)
