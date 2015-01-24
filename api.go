@@ -13,6 +13,8 @@ import (
 
 //go:generate gojson -o card.go -input json/mtg/card.json -name "Card" -pkg "godeckbrew"
 
+//go:generate gojson -o set.go -input json/mtg/set.json -name "Set" -pkg "godeckbrew"
+
 const baseUrl = "https://api.deckbrew.com"
 
 // GetCard implements the /mtg/cards/<id> endpoint

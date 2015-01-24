@@ -15,6 +15,23 @@ var app = appdirs.New("magictcg", "chimeracoder", ".1")
 const _CardIndexFilename = "Allsets-x.json"
 const _CardIndexUrl = "http://mtgjson.com/json/"
 
+
+func GetSet(set string) ([]*Card, error) {
+    if err := DownloadSet(set); err != nil{
+        return err
+    }
+
+	filename := path.Join(app.UserData(), set + ".json")
+
+    bts, err := ioutil.ReadFile(filename)
+    if err != nil {
+        return nil, err
+    }
+
+    json.Unmarshal
+
+}
+
 // DownloadSet will download the JSON representation of cards if it does not exist
 // "set" must be a three-letter string (e.g. KTK for Khans of Tarkir)
 func DownloadSet(set string) error {

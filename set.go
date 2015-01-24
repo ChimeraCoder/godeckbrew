@@ -1,10 +1,15 @@
 package godeckbrew
 
 type Set struct {
-	Border   string `json:"border"`
-	CardsURL string `json:"cards_url"`
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Type     string `json:"type"`
-	URL      string `json:"url"`
+	Block        string        `json:"block"`
+	Booster      []interface{} `json:"booster"`
+	Border       string        `json:"border"`
+	Cards        []interface{} `json:"cards"`
+	Code         string        `json:"code"`
+	GathererCode string        `json:"gathererCode"`
+	Name         string        `json:"name"`
+	OldCode      string        `json:"oldCode"`
+	OnlineOnly   bool          `json:"onlineOnly"`
+	ReleaseDate  string        `json:"releaseDate"`
+	Type         string        `json:"type"`
 }
