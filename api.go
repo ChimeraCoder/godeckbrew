@@ -2,6 +2,7 @@ package godeckbrew
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -28,10 +29,22 @@ func GetCard(id string) (card Card, err error) {
 	return
 }
 
+type Price string
+
+func (c *Card) Price() (p Price, err error) {
+	//TODO use set
+	price, err := ChannelFireballPrice(c.Name, "")
+	if err != nil {
+		return
+	}
+	return price, nil
+}
+
 // ChannelFireballPrice fetches the price from Channel Fireball
 // The card should be the full name (e.g. "Dark Confidant") and the set
 // (e.g. "ravnica") is optional
-func ChannelFireballPrice(card string, set string) (price string, err error) {
+// If the set is not provided, this will return the price for the first set returned by CFB
+func ChannelFireballPrice(card string, set string) (price Price, err error) {
 	const u = "http://magictcgprices.appspot.com/api/cfb/price.json?"
 	v := url.Values{}
 	v.Set("cardname", card)
@@ -44,5 +57,13 @@ func ChannelFireballPrice(card string, set string) (price string, err error) {
 
 	var result []string
 	err = json.Unmarshal(bts, &result)
-	return result[0], err
+	if len(result) == 0 {
+		return "", fmt.Errorf("No prices found")
+	}
+
+	// Currently CFB only returns a single price
+
+	price = Price(result[0])
+
+	return price, err
 }
