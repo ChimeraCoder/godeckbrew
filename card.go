@@ -1,4 +1,4 @@
-package main
+package godeckbrew
 
 type Card struct {
 	Cmc      int      `json:"cmc"`
