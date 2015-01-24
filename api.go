@@ -34,6 +34,27 @@ func GetCard(id string) (card Card, err error) {
 
 type Price string
 
+type Cents int
+
+func (p Price) Cents() (Cents, error) {
+	r := regexp.MustCompile(`\$(\d*?)\.(\d\d)`)
+	matches := r.FindAllStringSubmatch(string(p), -1)
+	if len(matches) != 1 || len(matches[0]) != 3 {
+		return -1, fmt.Errorf("Could not parse price: %s", p)
+	}
+	mantissa, err := strconv.Atoi(matches[0][1])
+	if err != nil {
+		return -1, fmt.Errorf("Could not parse price: %s", p)
+	}
+	decimal, err := strconv.Atoi(matches[0][2])
+	if err != nil {
+		return -1, fmt.Errorf("Could not parse price: %s", p)
+	}
+
+	return Cents(100*mantissa + decimal), nil
+
+}
+
 func (c *Card) Price() (p Price, err error) {
 	//TODO use set
 	price, err := ChannelFireballPrice(c.Name, "")
