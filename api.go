@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
+	"regexp"
 )
 
 //go:generate gojson -o card.go -input json/mtg/card.json -name "Card" -pkg "godeckbrew"
@@ -38,6 +40,46 @@ func (c *Card) Price() (p Price, err error) {
 		return
 	}
 	return price, nil
+}
+
+func Setlist(set string) (cards []*Card, err error) {
+	const endpoint = "/mtg/cards"
+	r := regexp.MustCompile(`<(.*?)>; rel="next"`)
+
+	v := url.Values{}
+	v.Set("set", set)
+	u := baseUrl + endpoint + "?" + v.Encode()
+	for {
+		resp, err := http.Get(u)
+		if err != nil {
+			return nil, err
+		}
+		bts, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		log.Printf("Headers are %s", resp.Header.Get("Link"))
+		linkHeader := resp.Header.Get("Link")
+
+		var result []*Card
+		err = json.Unmarshal(bts, &result)
+		if err != nil {
+			return nil, err
+		}
+
+		if nextMatch := r.FindStringSubmatch(linkHeader); len(nextMatch) == 2 {
+			cards = append(cards, result...)
+			parsedUrl, err := url.Parse(nextMatch[1])
+			if err != nil {
+				return nil, err
+			}
+			u = baseUrl + parsedUrl.Path
+		} else {
+			break
+		}
+	}
+
+	return
 }
 
 // ChannelFireballPrice fetches the price from Channel Fireball
