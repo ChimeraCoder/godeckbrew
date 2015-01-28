@@ -3,7 +3,10 @@ package godeckbrew
 import (
 	"math/rand"
 	"strings"
+	"time"
 )
+
+var r *rand.Rand
 
 type Set struct {
 	Block        string        `json:"block"`
@@ -29,16 +32,16 @@ func (s Set) NewBoosterPack() []*Card {
 	// TODO support other booster distributions
 	cards := make([]*Card, 15)
 
-	mythicRoll := rand.Intn(8)
+	mythicRoll := r.Intn(8)
 	if mythicRoll == 7 {
 		// first slot is a mythic rare
 		mythicRares := s.FilterRarity("mythicRare")
-		randCard := mythicRares[rand.Intn(len(mythicRares))]
+		randCard := mythicRares[r.Intn(len(mythicRares))]
 		cards[0] = &randCard
 	} else {
 		// first slot is a rare
 		rares := s.FilterRarity("rare")
-		randCard := rares[rand.Intn(len(rares))]
+		randCard := rares[r.Intn(len(rares))]
 
 		cards[0] = &randCard
 	}
@@ -47,7 +50,7 @@ func (s Set) NewBoosterPack() []*Card {
 	// Draw 3 uncommons
 	uncommons := s.FilterRarity("uncommon")
 	for i := 1; i < 4; i++ {
-		randCard := uncommons[rand.Intn(len(uncommons))]
+		randCard := uncommons[r.Intn(len(uncommons))]
 
 		cards[i] = &randCard
 	}
@@ -55,7 +58,7 @@ func (s Set) NewBoosterPack() []*Card {
 	// Draw 11 commons
 	commons := s.FilterRarity("common")
 	for i := 4; i < 15; i++ {
-		randCard := commons[rand.Intn(len(commons))]
+		randCard := commons[r.Intn(len(commons))]
 
 		cards[i] = &randCard
 	}
@@ -70,4 +73,8 @@ func (s Set) FilterRarity(rarity string) []Card {
 		}
 	}
 	return result
+}
+
+func init() {
+	r = rand.New(rand.NewSource(time.Now().UnixNano()))
 }
